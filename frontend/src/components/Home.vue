@@ -21,7 +21,7 @@
 </template>
 
 <script>
-  import axios from 'axios'
+import axios from 'axios'
 
 export default {
   name: 'Home',
@@ -32,7 +32,7 @@ export default {
   },
   created () {
     axios.get('http://127.0.0.1:8000/backend/').then(response => {
-      this.tableData = response.data;
+      this.tableData = response.data
     })
   }
 }
