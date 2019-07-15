@@ -143,3 +143,6 @@ test/
 *.iml
 out
 gen
+*.xml
+*.cpython-37.pyc
+__pycache__
