@@ -143,3 +143,4 @@ test/
 *.iml
 out
 gen
+*.xml
