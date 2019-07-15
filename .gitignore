@@ -144,3 +144,4 @@ test/
 out
 gen
 *.xml
+*.cpython-37.pyc
