@@ -1,5 +1,5 @@
 import axios from 'axios'
-import getUrl from 'getPath'
+import getUrl from './getPath'
 
 export default {
   Get: (config) => {

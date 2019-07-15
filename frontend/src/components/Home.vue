@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import PersonAPI from "../api/PersonAPI"
 
 export default {
   name: 'Home',
@@ -31,9 +31,14 @@ export default {
     }
   },
   created () {
-    axios.get('http://127.0.0.1:8000/backend/').then(response => {
-      this.tableData = response.data
-    })
+    this.getArticlesSpecific(1);
+  },
+  methods:{
+    getArticlesSpecific: function({ commit, state }, id) { //得到指定文章详情
+      PersonAPI.getArticlesSpecific({ commit, state }, id).then(result => {
+        this.tableData = result.data;
+      })
+    }
   }
 }
 </script>

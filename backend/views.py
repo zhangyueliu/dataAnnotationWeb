@@ -29,3 +29,29 @@ def index(request):
     ]
 
     return JsonResponse(data, safe=False)
+
+def getArticleSpecific(request):
+    data = [
+        {
+            "date": '2016-05-02',
+            "name": '王小虎',
+            "sex": '男'
+        },
+        {
+            "date": '2016-05-02',
+            "name": '王小虎',
+            "sex": '男'
+        },
+        {
+            "date": '2016-05-02',
+            "name": '王小虎',
+            "sex": '男'
+        },
+        {
+            "date": '2016-05-02',
+            "name": '王小虎',
+            "sex": '男'
+        },
+    ]
+
+    return JsonResponse(data, safe=False)
