@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'backend',
+    # 'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -51,12 +52,17 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'dataAnnotationWeb.urls'
+CORS_ORIGIN_WHITELIST = (
+ '127.0.0.1:8080', #Backend
+ '127.0.0.1:8000', #Frontend on dev mode
+)
 
+ROOT_URLCONF = 'dataAnnotationWeb.urls'
+FRONTEND_ROOT = 'frontend/dist'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['frontend/dist'],
+        'DIRS': [FRONTEND_ROOT],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -70,7 +76,8 @@ TEMPLATES = [
 ]
 
 STATICFILES_DIRS = [             ## 添加静态文件路径
-    os.path.join(BASE_DIR, "frontend/dist/static"),
+    os.path.join(BASE_DIR, FRONTEND_ROOT),
+    os.path.join(BASE_DIR, FRONTEND_ROOT + '/static'),
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -88,7 +95,7 @@ DATABASES = {
     }
 }
 
-
+# AUTH_USER_MODEL = 'info.UserInfo'
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -106,7 +113,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
