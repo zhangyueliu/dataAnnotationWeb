@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import PersonAPI from "../api/PersonAPI"
+import PersonAPI from '../api/PersonAPI'
 
 export default {
   name: 'Home',
@@ -31,12 +31,12 @@ export default {
     }
   },
   created () {
-    this.getArticlesSpecific(1);
+    this.getData(1)
   },
-  methods:{
-    getArticlesSpecific: function({ commit, state }, id) { //得到指定文章详情
-      PersonAPI.getArticlesSpecific({ commit, state }, id).then(result => {
-        this.tableData = result.data;
+  methods: {
+    getData: function ({ commit, state }, id) { // 得到指定文章详情
+      PersonAPI.getAllData({ commit, state }, id).then(result => {
+        this.tableData = result.data
       })
     }
   }

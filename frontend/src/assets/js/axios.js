@@ -3,37 +3,37 @@ import getUrl from './getPath'
 
 export default {
   Get: (config) => {
-    axios({
-      methods: "get",
+    return axios({
+      methods: 'get',
       url: getUrl(config.url),
       params: config.params
     }).then((res) => {
-      stateDetection(res);
-      config.callback && config.callback(res);
+      stateDetection(res)
+      return config.callback && config.callback(res)
     })
   },
   Post: (config) => {
     axios({
-      methods: "post",
-      url: getUrl(config.url),
+      methods: 'post',
+      url: getUrl(config.url)
     }).then((res) => {
-      stateDetection(res);
-      config.callback && config.callback(res);
+      stateDetection(res)
+      config.callback && config.callback(res)
     })
   }
 }
 
-//状态检测
+// 状态检测
 let stateDetection = (data, callback) => {
-    let status = data.status_code;
+    let status = data.status_code
     switch (status) {
         case 102:
-            break;
+            break
         case 103:
-            alert(data.content);
-            break;
+            alert(data.content)
+            break
         case 404:
-            window.location.href = data.url;
-            break;
+            window.location.href = data.url
+            break
     }
 }
