@@ -11,6 +11,19 @@ var staticMethods = {
         return res
       }
     })
+  },
+  addData (data) {
+    let _data = new FormData()
+    _data.append('a','a')
+    return axios.Post({
+      url: 'add_data/',
+      params: {
+        data: _data
+      },
+      callback: (res) => {
+        return res
+      }
+    })
   }
 }
 
