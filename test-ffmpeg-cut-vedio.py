@@ -43,7 +43,7 @@ def cut_media_time(file_name,start_time,cut_time,put_path,index):
     #合并到路径里
     put_file_path = os.path.join(put_path, filename)
     # ffmpeg的字符串切割命令字符串
-    pfile = 'C:/Users/zhangyue/Desktop/ffmpeg-20190722-817235b-win64-static/bin/ffmpeg.exe -ss %s -t %s -i "%s" -vcodec copy -acodec copy "%s"'%(get_format_time(start_time),get_format_time(cut_time),file_name,put_file_path)
+    pfile = 'C:/Users/zhangyue/Desktop/ffmpeg-20190722-817235b-win64-static/bin/ffmpeg.exe -ss "%s" -t "%s" -i "%s" -vcodec copy -acodec copy "%s"'%(get_format_time(start_time),get_format_time(cut_time),file_name,put_file_path)
     #执行切割操作
     subprocess.Popen(pfile)
 
@@ -72,23 +72,26 @@ def set_cut_time(file_name,put_path,time_frame):
     count = int(dura_time_float / time_frame)
     #创建存放文件的路径
     put_file_path = create_folder(file_name,put_path)
-    cut_time = time_frame + 2.00
+    # cut_time = time_frame + 2.00
     i = 0
     while i < count:
         start_time = i * time_frame
         i += 1
-        cut_media_time(file_name,start_time,cut_time,put_file_path,i)
+        cut_media_time(file_name,start_time,time_frame,put_file_path,i)
     start_time = count * time_frame
-    cut_media_time(file_name,start_time,cut_time,put_file_path,count+1)
+    cut_media_time(file_name,start_time,time_frame,put_file_path,count+1)
 
-
+#视频转为帧内编码
+# def transfer_vedio(filename):
+#     pfile = 'C:/Users/zhangyue/Desktop/ffmpeg-20190722-817235b-win64-static/bin/ffmpeg -i "%s" -strict -2  -qscale 0 -intra "%s"'%(filename,os.path.join(dir_path,"1.mkv"))
+#     subprocess.Popen(pfile)
 
 #计算切分成等长小视频，每个小视频结束多几秒钟，最后一个小视频可小于规定长度
 get_all_file(dir_path)
 #对列表中的文件批量执行
 for file in file_list:
-    set_cut_time(file,put_path,30.00)   
-
+    # transfer_vedio(file)
+    set_cut_time(file,put_path,30.00)
 
 
 
