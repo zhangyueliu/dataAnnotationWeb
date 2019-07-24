@@ -3,7 +3,7 @@ import subprocess,json,os
 #源文件目录
 dir_path = 'E:/video-cut/source-file/'
 #截取后的文件目录
-put_path = 'E:/video-cut/vedio-slip/'
+put_path = 'E:/video-cut/video-slip/'
 #定义个列表存放每个文件路径，便于后期操作
 file_list=[]
 
@@ -82,7 +82,7 @@ def set_cut_time(file_name,put_path,time_frame):
     cut_media_time(file_name,start_time,time_frame,put_file_path,count+1)
 
 #视频转为帧内编码
-# def transfer_vedio(filename):
+# def transfer_video(filename):
 #     pfile = 'C:/Users/zhangyue/Desktop/ffmpeg-20190722-817235b-win64-static/bin/ffmpeg -i "%s" -strict -2  -qscale 0 -intra "%s"'%(filename,os.path.join(dir_path,"1.mkv"))
 #     subprocess.Popen(pfile)
 
@@ -90,7 +90,7 @@ def set_cut_time(file_name,put_path,time_frame):
 get_all_file(dir_path)
 #对列表中的文件批量执行
 for file in file_list:
-    # transfer_vedio(file)
+    # transfer_video(file)
     set_cut_time(file,put_path,10.00)
 
 
