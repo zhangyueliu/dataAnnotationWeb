@@ -91,7 +91,7 @@ get_all_file(dir_path)
 #对列表中的文件批量执行
 for file in file_list:
     # transfer_vedio(file)
-    set_cut_time(file,put_path,30.00)
+    set_cut_time(file,put_path,10.00)
 
 
 
