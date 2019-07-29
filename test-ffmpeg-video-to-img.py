@@ -1,28 +1,22 @@
 from ffmpy import FFmpeg
-import os
-import PIL as Image
+import os,subprocess
 from tqdm import tqdm
-import subprocess
 
-
-def cut_change(video_path,out_path, out_path2, out_path3, base_path, fps_r):
+#对小视频进行抽帧，得到图片组
+def cut_change(video_path,out_path,fps_r):
     """
     操作ffmpeg执行
     :param video_path: 处理输入视频流
-    :param out_path: 合成缩略图 10*10
-    :param out_path2: 封面图路径
-    :param out_path3: 合成Ts流和 *.m3u8文件
-    :param base_path:
     :param fps_r: 对视频帧截取速度
     :return:
     """
-    ff = FFmpeg(inputs={video_path:None},
-                outputs={out_path: '-f image2 -vf fps=fps={},scale=180*75,tile=10x10'.format(fps_r),
-                         out_path2: '-y -f mjpeg -ss 0 -t 0.001',
-                         None: '-c copy -map 0 -y -f segment -segment_list {0} -segment_time 1  -bsf:v h264_mp4toannexb  {1}/cat_output%03d.ts'.format(
-                             out_path3, base_path),
+    # ff = FFmpeg(inputs={video_path:None},outputs={out_path: '-f image2 -vf fps=fps={}'.format(fps_r)})
+
+    #清晰度较高
+    ff = FFmpeg(inputs={video_path: None},
+                outputs={out_path: '-f image2  -vf fps=fps={} -qscale:v 2'.format(fps_r)
                          })
-    print(ff.cmd)
+
     ff.run()
 
 
@@ -37,9 +31,15 @@ def extract_frames(src_path, target_path):
             os.mkdir(cur_new_path)
         dest = os.path.join(cur_new_path , video_name.split('.')[0] + '_%04d.jpg')
         #抽帧
-        subprocess.Popen("C:/Users/zhangyue/Desktop/ffmpeg-20190722-817235b-win64-static/bin/ffmpeg.exe -i {0} -f image2 -vf fps=fps=1 {1}".format(filename,dest))
+        cut_change(filename,dest,8)
 
-        # call(["ffmpeg", "-i", filename, "-r", "5", dest])  # 这里的5为5fps，帧率可修改
+        #抽帧命令行
+        # subprocess.Popen("D:/SoftWare/ffmpeg-20190722-817235b-win64-static/bin/ffmpeg.exe -i {0} -f image2 -vf fps=fps=10 {1}".format(filename,dest))
 
+
+        #抽取关键帧
+        # subprocess.Popen('ffmpeg -i {0} -vf select="eq(pict_type\,I)" -vsync 2 -s 1980x1080 -f image2 {1}'.format(filename,dest))
+        # subprocess.call(["ffmpeg", "-i", filename, "-r", "8", dest])  # 这里的5为5fps，帧率可修改
+        break;
 
 extract_frames(src_path='E:/video-cut/video-slip/(101)_20190620202150_2',target_path='E:/video-cut/video-to-img')

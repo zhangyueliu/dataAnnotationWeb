@@ -1,4 +1,5 @@
 import subprocess,json,os
+import cv2
 
 #源文件目录
 dir_path = 'E:/video-cut/source-file/'
@@ -20,8 +21,7 @@ def get_all_file(dir_path):
 
 # 获取视频时长
 def get_file_dura_time(file_name):
-    pname = 'C:/Users/zhangyue/Desktop/ffmpeg-20190722-817235b-win64-static/bin/ffprobe.exe -v quiet -print_format json -show_format "%s"' % (
-        file_name)
+    pname = 'ffprobe -v quiet -print_format json -show_format "%s"' % (file_name)
     result = subprocess.Popen(pname, shell=False, stdout=subprocess.PIPE).stdout
     list_std = result.readlines()
     str_tmp = ''
@@ -34,6 +34,25 @@ def get_file_dura_time(file_name):
     dura_time_float = float(dura_time)
     return dura_time_float
 
+#获取视频帧率
+def get_file_frame_cv(file_name):
+    video = cv2.VideoCapture(file_name);
+
+    # Find OpenCV version
+    (major_ver, minor_ver, subminor_ver) = (cv2.__version__).split('.')
+
+    if int(major_ver) < 3:
+        fps = video.get(cv2.cv.CV_CAP_PROP_FPS)
+        print
+        "Frames per second using video.get(cv2.cv.CV_CAP_PROP_FPS): {0}".format(fps)
+    else:
+        fps = video.get(cv2.CAP_PROP_FPS)
+        print
+        "Frames per second using video.get(cv2.CAP_PROP_FPS) : {0}".format(fps)
+    video.release();
+    return fps;
+
+
 #定义方法，传入文件和截取的时间信息，调用ffmpeg进行切割
 def cut_media_time(file_name,start_time,cut_time,put_path,index):
     # 获取文件名，去掉路径
@@ -43,7 +62,7 @@ def cut_media_time(file_name,start_time,cut_time,put_path,index):
     #合并到路径里
     put_file_path = os.path.join(put_path, filename)
     # ffmpeg的字符串切割命令字符串
-    pfile = 'C:/Users/zhangyue/Desktop/ffmpeg-20190722-817235b-win64-static/bin/ffmpeg.exe -ss "%s" -t "%s" -i "%s" -vcodec copy -acodec copy "%s"'%(get_format_time(start_time),get_format_time(cut_time),file_name,put_file_path)
+    pfile = 'ffmpeg -ss "%s" -t "%s" -i "%s" -vcodec copy -acodec copy "%s"'%(get_format_time(start_time),get_format_time(cut_time),file_name,put_file_path)
     #执行切割操作
     subprocess.Popen(pfile)
 
@@ -69,10 +88,11 @@ def create_folder(file_name,put_path):
 #设置切割视频的时间，循环切割
 def set_cut_time(file_name,put_path,time_frame):
     dura_time_float = get_file_dura_time(file_name)
+    #计算每秒的帧数
+    fps = get_file_frame_cv(file_name)
     count = int(dura_time_float / time_frame)
     #创建存放文件的路径
     put_file_path = create_folder(file_name,put_path)
-    # cut_time = time_frame + 2.00
     i = 0
     while i < count:
         start_time = i * time_frame
@@ -93,9 +113,4 @@ for file in file_list:
     # transfer_video(file)
     set_cut_time(file,put_path,10.00)
 
-
-
-
-
-#对小视频进行抽帧，得到图片组
 
