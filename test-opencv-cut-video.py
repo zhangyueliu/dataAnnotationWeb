@@ -52,17 +52,12 @@ def cut_video(file):
     put_file_name = os.path.join(put_file_path, put_file_name)
     v = cv2.VideoWriter(put_file_name, fourcc, fps, size)
 
-
     while success:  # 循环读取视频帧
 
         cv2.imshow('frame', bgr_image)
 
         if v.isOpened():
             v.write(bgr_image)
-
-        if frame_index == (fps * cut_time) * flag + (fps * cut_time):
-            if v.isOpened():
-                v.release()
 
         if frame_index == (fps * cut_time) * flag:
             v = cv2.VideoWriter(os.path.join(put_file_path,os.path.splitext(filename)[0] + '_' + str(flag) + os.path.splitext(filename)[1]), fourcc, fps, size)
