@@ -1,6 +1,7 @@
 from ffmpy import FFmpeg
 import os,subprocess
 from tqdm import tqdm
+import datetime
 
 #对小视频进行抽帧，得到图片组
 def cut_change(video_path,out_path,fps_r):
@@ -16,6 +17,11 @@ def cut_change(video_path,out_path,fps_r):
     ff = FFmpeg(inputs={video_path: None},
                 outputs={out_path: '-f image2  -vf fps=fps={} -qscale:v 2'.format(fps_r)
                          })
+
+    #每3帧抽一帧
+    # ff = FFmpeg(inputs={video_path: None},
+    #             outputs={out_path: '-f image2  -vf select="not(mod(n\,3))" -vsync 2 -qscale:v 2'
+    #                      })
 
     ff.run()
 
@@ -40,6 +46,13 @@ def extract_frames(src_path, target_path):
         #抽取关键帧
         # subprocess.Popen('ffmpeg -i {0} -vf select="eq(pict_type\,I)" -vsync 2 -s 1980x1080 -f image2 {1}'.format(filename,dest))
         # subprocess.call(["ffmpeg", "-i", filename, "-r", "8", dest])  # 这里的5为5fps，帧率可修改
-        break;
+        # break;
 
+
+start = datetime.datetime.now()
+#对短视频抽帧
 extract_frames(src_path='E:/video-cut/video-slip/(101)_20190620202150_2',target_path='E:/video-cut/video-to-img')
+#对长视频抽帧
+# extract_frames(src_path='E:/video-cut/source-file',target_path='E:/video-cut/big-video-to-img')
+end = datetime.datetime.now()
+print(end - start)

@@ -11,9 +11,7 @@ file_list=[]
 #创建个方法，统计每个文件路径，并追加列表中。用到了递归，列表中的是每个文件的绝对路径
 def get_all_file(dir_path):
     for file in os.listdir(dir_path):
-        # print(file)
         filepath = os.path.join(dir_path, file)
-        # print(filepath)
         if os.path.isdir(filepath):
             get_all_file(filepath)
         else:
@@ -34,6 +32,8 @@ def get_file_dura_time(file_name):
     dura_time_float = float(dura_time)
     return dura_time_float
 
+
+
 #获取视频帧率
 def get_file_frame_cv(file_name):
     video = cv2.VideoCapture(file_name);
@@ -43,12 +43,10 @@ def get_file_frame_cv(file_name):
 
     if int(major_ver) < 3:
         fps = video.get(cv2.cv.CV_CAP_PROP_FPS)
-        print
-        "Frames per second using video.get(cv2.cv.CV_CAP_PROP_FPS): {0}".format(fps)
+        print("Frames per second using video.get(cv2.cv.CV_CAP_PROP_FPS): {0}".format(fps))
     else:
         fps = video.get(cv2.CAP_PROP_FPS)
-        print
-        "Frames per second using video.get(cv2.CAP_PROP_FPS) : {0}".format(fps)
+        print("Frames per second using video.get(cv2.CAP_PROP_FPS) : {0}".format(fps))
     video.release();
     return fps;
 
@@ -61,8 +59,12 @@ def cut_media_time(file_name,start_time,cut_time,put_path,index):
     filename = os.path.splitext(filename)[0] + '_' + str(index) + os.path.splitext(filename)[1]
     #合并到路径里
     put_file_path = os.path.join(put_path, filename)
-    # ffmpeg的字符串切割命令字符串
-    pfile = 'ffmpeg -ss "%s" -t "%s" -i "%s" -vcodec copy -acodec copy "%s"'%(get_format_time(start_time),get_format_time(cut_time),file_name,put_file_path)
+    # ffmpeg的字符串切割命令字符串,使用关键帧
+    #pfile = 'ffmpeg -ss "%s" -t "%s" -i "%s" -vcodec copy -acodec copy "%s"'%(get_format_time(start_time),get_format_time(cut_time),file_name,put_file_path)
+
+    #不使用关键帧
+    pfile = 'ffmpeg -ss "%s" -t "%s" -i "%s" -c:v h264 -c:a copy "%s"' % (get_format_time(start_time), get_format_time(cut_time), file_name, put_file_path)
+
     #执行切割操作
     subprocess.Popen(pfile)
 
@@ -89,7 +91,7 @@ def create_folder(file_name,put_path):
 def set_cut_time(file_name,put_path,time_frame):
     dura_time_float = get_file_dura_time(file_name)
     #计算每秒的帧数
-    fps = get_file_frame_cv(file_name)
+    # fps = get_file_frame_cv(file_name)
     count = int(dura_time_float / time_frame)
     #创建存放文件的路径
     put_file_path = create_folder(file_name,put_path)
@@ -111,6 +113,6 @@ get_all_file(dir_path)
 #对列表中的文件批量执行
 for file in file_list:
     # transfer_video(file)
-    set_cut_time(file,put_path,10.00)
+    set_cut_time(file,put_path,50.00)
 
 
