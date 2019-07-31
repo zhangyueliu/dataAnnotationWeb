@@ -58,12 +58,12 @@ def get_all_data(request):
 
 @ensure_csrf_cookie
 def add_data(request):
-    get_token(request)
+    # get_token(request)
     if request.method != "POST":
-        return HttpResponse()
+        return render(request, request.path)
     print('aaa')
     success = True
 
-    return HttpResponse(success, safe=False)
+    return render(success, './frontend/src/components/Home.vue')
 
 
