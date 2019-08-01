@@ -1,8 +1,9 @@
 import subprocess,json,os
 import cv2
 
-#源文件目录
-dir_path = 'E:/video-cut/source-file-mp4/'
+
+#转为mp4的文件目录
+dir_mp4_path = 'E:/video-cut/source-file-mp4/'
 #截取后的文件目录
 put_path = 'E:/video-cut/video-slip/'
 #定义个列表存放每个文件路径，便于后期操作
@@ -103,26 +104,11 @@ def set_cut_time(file_name,put_path,time_frame):
     start_time = count * time_frame
     cut_media_time(file_name,start_time,time_frame,put_file_path,count+1)
 
-#视频转为MP4
-def transfer_video(file_name):
-    put_path_mp4 = 'E:/video-cut/source-file-mp4'
-    # 获取文件名
-    filename = os.path.split(file_name)[1]
-    print(filename)
-    # 去掉后缀名，作为新的文件名
-    put_file_name = os.path.splitext(filename)[0] + '.mp4'
-    # 路径若不存在则新建路径
-    if not os.path.exists(put_path_mp4):
-        os.makedirs(put_path_mp4)
-    put_file_name = os.path.join(put_path_mp4,put_file_name)
-    pfile = 'ffmpeg -i "%s" -c:v libx264 -strict -2 -s 1980x1080 -b 1000k "%s"'%(file_name,put_file_name)
-    subprocess.Popen(pfile)
 
 #计算切分成等长小视频，每个小视频结束多几秒钟，最后一个小视频可小于规定长度
-get_all_file(dir_path)
+get_all_file(dir_mp4_path)
 #对列表中的文件批量执行
 for file in file_list:
-    # transfer_video(file)
-    set_cut_time(file,put_path,300.00)
+    set_cut_time(file,put_path,60.00)
 
 
