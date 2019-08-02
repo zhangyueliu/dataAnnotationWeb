@@ -29,7 +29,10 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
+CSRF_COOKIE_AGE = 300
+CSRF_COOKIE_SECURE = False
+CSRF_USE_SESSIONS = False
+CSRF_COOKIE_HTTPONLY = False
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,7 +41,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'backend',
-    # 'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -52,9 +54,40 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    )
+}
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = (
- '127.0.0.1:8080', #Backend
- '127.0.0.1:8000', #Frontend on dev mode
+  '*'
+)
+
+CORS_ALLOW_METHODS = (
+  'DELETE',
+  'GET',
+  'OPTIONS',
+  'PATCH',
+  'POST',
+  'PUT',
+  'VIEW',
+)
+
+CORS_ALLOW_HEADERS = (
+  'XMLHttpRequest',
+  'X_FILENAME',
+  'accept-encoding',
+  'authorization',
+  'content-type',
+  'dnt',
+  'origin',
+  'user-agent',
+  'x-csrftoken',
+  'x-requested-with',
+  'Pragma',
 )
 
 ROOT_URLCONF = 'dataAnnotationWeb.urls'
@@ -75,12 +108,17 @@ TEMPLATES = [
     },
 ]
 
+
+
+
+CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
+
+
 STATICFILES_DIRS = [             ## 添加静态文件路径
     os.path.join(BASE_DIR, FRONTEND_ROOT),
     os.path.join(BASE_DIR, FRONTEND_ROOT + '/static'),
 ]
 
-CORS_ORIGIN_ALLOW_ALL = True
 
 WSGI_APPLICATION = 'dataAnnotationWeb.wsgi.application'
 
