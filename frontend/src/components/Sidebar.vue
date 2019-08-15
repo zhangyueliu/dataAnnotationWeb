@@ -77,9 +77,10 @@
           for (i = 0; i < new_img_id_list.length; i++) {
             let url = this.getObjectURL(this.via_img_fileref[new_img_id_list[i]])
             let bimg = document.createElement('img')
+            bimg.setAttribute('class','img-item')
             bimg.setAttribute('src',url)
             bimg.setAttribute('id', new_img_id_list[i])
-            document.getElementById('img_box').append(bimg)
+            document.getElementById('img-box').append(bimg)
           }
         },
         project_add_new_file: function (filename, size, file_id){
@@ -107,7 +108,6 @@
           }
         },
         getObjectURL: function (file) {
-          console.log(file)
           let url = null ;
           if (window.createObjectURL!=undefined) { // basic
             url = window.createObjectURL(file) ;
@@ -119,7 +119,6 @@
           return url ;
         },
         _via_show_img: function (img_id) {
-          document.getElementById(img_id).style.visibility = 'visible'
           // 点击图片列表，样式切换
           this.img_title_list_remove_all_active_class()
           this.img_title_list_add_active_class(img_id)
@@ -131,13 +130,22 @@
           document.getElementById('invisible_file_input').click()
         },
         img_title_list_add_active_class: function (img_id) {
-          document.getElementById('title-' + img_id).classList.add('img-title-active');
+          // 列表高亮
+          document.getElementById('title-' + img_id).classList.add('img-title-active')
+          // image显示
+          document.getElementById(img_id).classList.add('visible')
         },
         img_title_list_remove_all_active_class: function () {
           let els = document.getElementById('img-title-list').childNodes
           let i
           for (i = 0; i < els.length; i++) {
             els[i].classList.remove('img-title-active')
+          }
+          let imgs = document.getElementById('img-box').childNodes
+          let j
+          for (j = 0; j < imgs.length; j++) {
+            console.log(imgs[j])
+            imgs[j].classList.remove('visible')
           }
         }
       }
