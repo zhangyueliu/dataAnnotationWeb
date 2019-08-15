@@ -15,6 +15,9 @@ axios.interceptors.request.use((config) => {
   return config
 })
 
+let eventBus = new Vue()
+Vue.prototype.bus = eventBus
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

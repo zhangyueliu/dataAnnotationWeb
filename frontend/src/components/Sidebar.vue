@@ -29,6 +29,21 @@
           fileList: {}
         }
       },
+      mounted () {
+        let _this = this
+        this.bus.$on('pre-img',function (is_selected_id) {
+          let is_selected_index = _this.via_image_id_list.indexOf(is_selected_id)
+          let pre_index = (is_selected_index - 1 + _this.via_image_id_list.length) % _this.via_image_id_list.length
+          let pre_id = _this.via_image_id_list[pre_index]
+          _this.jump_to_image(pre_id)
+        })
+        this.bus.$on('next-img',function (is_selected_id) {
+          let is_selected_index = _this.via_image_id_list.indexOf(is_selected_id)
+          let pre_index = (is_selected_index + 1 + _this.via_image_id_list.length) % _this.via_image_id_list.length
+          let pre_id = _this.via_image_id_list[pre_index]
+          _this.jump_to_image(pre_id)
+        })
+      },
       methods: {
         add_local_files: function (event) {
           let select_local_files = event.target.files
@@ -60,9 +75,10 @@
               console.log('其它类型文件！')
             }
           }
+          this.bus.$emit('change-image-list', this.via_img_fileref)
           if(this.via_img_metadata) {
             if(new_img_id_list.length) {
-              this.add_html_to_img_list(new_img_id_list)
+              this.bus.$emit('add-image-list', new_img_id_list)
               //显示new_img_index_list[0]
               this._via_show_img(new_img_id_list[0])
             } else {
@@ -70,17 +86,6 @@
             }
           } else {
             // 没有增加新文件
-          }
-        },
-        add_html_to_img_list: function (new_img_id_list) {
-          let i
-          for (i = 0; i < new_img_id_list.length; i++) {
-            let url = this.getObjectURL(this.via_img_fileref[new_img_id_list[i]])
-            let bimg = document.createElement('img')
-            bimg.setAttribute('class','img-item')
-            bimg.setAttribute('src',url)
-            bimg.setAttribute('id', new_img_id_list[i])
-            document.getElementById('img-box').append(bimg)
           }
         },
         project_add_new_file: function (filename, size, file_id){
@@ -107,21 +112,13 @@
             return filename + size;
           }
         },
-        getObjectURL: function (file) {
-          let url = null ;
-          if (window.createObjectURL!=undefined) { // basic
-            url = window.createObjectURL(file) ;
-          }else if (window.webkitURL!=undefined) { // webkit or chrome
-            url = window.webkitURL.createObjectURL(file) ;
-          }else if (window.URL!=undefined) { // mozilla(firefox)
-            url = window.URL.createObjectURL(file) ;
-          }
-          return url ;
-        },
         _via_show_img: function (img_id) {
-          // 点击图片列表，样式切换
-          this.img_title_list_remove_all_active_class()
-          this.img_title_list_add_active_class(img_id)
+          this.bus.$emit('show-img',img_id)
+          this.$nextTick(() => {
+            // 点击图片列表，样式切换
+            this.img_title_list_remove_all_active_class()
+            this.img_title_list_add_active_class(img_id)
+          })
         },
         jump_to_image: function (img_id) {
           this._via_show_img(img_id)
@@ -130,23 +127,17 @@
           document.getElementById('invisible_file_input').click()
         },
         img_title_list_add_active_class: function (img_id) {
-          // 列表高亮
-          document.getElementById('title-' + img_id).classList.add('img-title-active')
-          // image显示
-          document.getElementById(img_id).classList.add('visible')
+            // 列表高亮
+            document.getElementById('title-' + img_id).classList.add('img-title-active')
         },
         img_title_list_remove_all_active_class: function () {
-          let els = document.getElementById('img-title-list').childNodes
-          let i
-          for (i = 0; i < els.length; i++) {
-            els[i].classList.remove('img-title-active')
-          }
-          let imgs = document.getElementById('img-box').childNodes
-          let j
-          for (j = 0; j < imgs.length; j++) {
-            console.log(imgs[j])
-            imgs[j].classList.remove('visible')
-          }
+
+            let els = document.getElementById('img-title-list').childNodes
+            let i
+            for (i = 0; i < els.length; i++) {
+              els[i].classList.remove('img-title-active')
+            }
+
         }
       }
     }
