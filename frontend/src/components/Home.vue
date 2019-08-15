@@ -139,6 +139,7 @@ export default {
       }
     },
     getObjectURL: function (file) {
+      console.log(file)
       let url = null ;
       if (window.createObjectURL!=undefined) { // basic
         url = window.createObjectURL(file) ;
