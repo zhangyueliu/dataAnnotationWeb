@@ -43,12 +43,10 @@
             let imgs = document.getElementById('img-box').childNodes
             let j
             for (j = 0; j < imgs.length; j++) {
-              console.log(imgs[j])
               imgs[j].classList.remove('visible')
             }
         },
         img_add_visible_class: function (img_id) {
-          console.log(img_id)
           // image显示
           document.getElementById(img_id).classList.add('visible')
         },

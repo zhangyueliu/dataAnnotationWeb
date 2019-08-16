@@ -17,12 +17,23 @@
       name: "MenuBar",
       methods:{
         pre_img: function () {
-          let is_selected_id = document.getElementsByClassName('visible')[0].id
-          this.bus.$emit('pre-img',is_selected_id)
+          let is_selected = document.getElementsByClassName('visible')
+          if(is_selected.length) {
+            let is_selected_id = is_selected[0].id
+            this.bus.$emit('pre-img',is_selected_id)
+          } else {
+            console.log('请上传图片')
+          }
+
         },
         next_img: function () {
-          let is_selected_id = document.getElementsByClassName('visible')[0].id
-          this.bus.$emit('next-img',is_selected_id)
+          let is_selected = document.getElementsByClassName('visible')
+          if(is_selected.length) {
+            let is_selected_id = is_selected[0].id
+            this.bus.$emit('next-img', is_selected_id)
+          } else {
+            console.log('请上传图片')
+          }
         }
       }
     }

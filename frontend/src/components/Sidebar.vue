@@ -127,8 +127,11 @@
           document.getElementById('invisible_file_input').click()
         },
         img_title_list_add_active_class: function (img_id) {
-            // 列表高亮
-            document.getElementById('title-' + img_id).classList.add('img-title-active')
+          // 列表高亮
+          let element = document.getElementById('title-' + img_id)
+          element.classList.add('img-title-active')
+          // 当前选中列表滚动到可视区域
+          this.img_title_list_scroll_to_view(element)
         },
         img_title_list_remove_all_active_class: function () {
 
@@ -138,6 +141,30 @@
               els[i].classList.remove('img-title-active')
             }
 
+        },
+        // 图片列表根据选中元素滚动，以显示选中元素
+        img_title_list_scroll_to_view: function (element) {
+          let img_title_list_box = document.getElementsByClassName('img-title-list-box')[0]
+          let img_list_title = document.getElementsByClassName('img-list-title')[0]
+          // 该元素 距离 显示区域顶部 的距离
+          let img_title_top = element.offsetTop - img_list_title.offsetHeight - img_title_list_box.scrollTop
+          // 该元素的高度
+          let img_title_height = element.offsetHeight
+          // 显示区域的高度
+          let box_height = img_title_list_box.clientHeight
+          // 如果距离显示区域顶部的距离小于等于0，则是在显示区域上面，则向下滚动
+          if (img_title_top <= 0) {
+            // img_title_top为负值，直接加上即可
+            img_title_list_box.scrollTop += img_title_top
+          } else { //大于0，也就是在显示区域顶部的下面了
+            // 元素底部 距离 显示区域底部 的距离
+            let differ = box_height - (img_title_top + img_title_height)
+            // 距离 显示区域底部 的距离小于0，则在显示区域的底部的下面了，则向上滚动；大于等于0，则在显示区域内，不需要滚动
+            if (differ < 0) {
+              // differ为负值，要减去它
+              img_title_list_box.scrollTop -= differ
+            }
+          }
         }
       }
     }
